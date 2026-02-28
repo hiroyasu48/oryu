@@ -8,7 +8,7 @@ import hashlib
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 import requests
 from bs4 import BeautifulSoup
@@ -76,7 +76,7 @@ def main() -> None:
         print("ERROR: 環境変数 DISCORD_WEBHOOK_URL が設定されていません", file=sys.stderr)
         sys.exit(1)
 
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {TARGET_URL} を取得中...")
+    print(f"[{datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M:%S')}] {TARGET_URL} を取得中...")
 
     try:
         html = fetch_page(TARGET_URL)
@@ -88,7 +88,7 @@ def main() -> None:
     current_hash = compute_hash(content)
     state = load_state()
     previous_hash = state.get("hash")
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.now(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M:%S")
 
     if previous_hash is None:
         print("初回実行: 現在の状態を保存します。")
